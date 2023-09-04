@@ -1,0 +1,60 @@
+{
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "search.exclude": {
+    "yarn.lock": true,
+    ".next": true,
+    "**/.yarn": true,
+    "**/tsconfig.tsbuildinfo": true,
+    "**/build": true,
+    "**/builds": true,
+    "**/.caches": true,
+    "**/.pnp.*": true,
+    "**/*.svg": true
+  },
+  "[mdx]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
+    }
+  },
+  // vscode-remark requires Markdown language. Come back when vscode-mdx improves in 2023
+  "files.associations": {
+    "*.mdx": "markdown",
+    ".env.*": "dotenv",
+    ".env": "dotenv"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": [
+    "source.addMissingImports",
+    "source.fixAll.eslint"
+  ],
+  "eslint.options": {
+    "extensions": [".js", ".jsx", "md", ".mdx", ".ts", ".tsx"]
+  },
+  "eslint.validate": [
+    "markdown",
+    "mdx",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.trace.server": "messages",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "workbench.iconTheme": "vscode-icons",
+  "todohighlight.keywords": [
+    "TODO",
+    "todo",
+    "fixme",
+    "FIXME",
+    "NOT IMPLEMENTED",
+    "NotImplementedError"
+  ],
+  "todohighlight.isEnable": true,
+  "npm.packageManager": "yarn",
+}
