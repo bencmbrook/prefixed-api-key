@@ -56,5 +56,5 @@
     "NotImplementedError"
   ],
   "todohighlight.isEnable": true,
-  "npm.packageManager": "yarn",
+  "npm.packageManager": "yarn"
 }

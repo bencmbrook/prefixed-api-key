@@ -42,14 +42,14 @@ Prefix             Short Token       Long Token
 ## Getting Started
 
 ```ts
-import { generateAPIKey } from "prefixed-api-key"
+import { generateAPIKey } from 'prefixed-api-key';
 
-const key = await generateAPIKey({ keyPrefix: 'mycompany' })
+const key = await generateAPIKey({ keyPrefix: 'mycompany' });
 
 // Store the key.longTokenHash and key.shortToken in your database and give
 // key.token to your customer.
 
-console.log(key)
+console.log(key);
 /*
 {
   shortToken: 'BRTRKFsL',
