@@ -1,6 +1,6 @@
 import { randomBytes, createHash, timingSafeEqual } from "node:crypto"
 import { promisify } from "node:util"
-import bs58 from "bs58"
+import { base58 } from '@scure/base';
 
 const hashLongTokenToBuffer = (longToken: string): Buffer =>
   createHash("sha256").update(longToken).digest();
@@ -30,12 +30,12 @@ export const generateAPIKey = async ({
     generatedRandomBytes(longTokenLength),
   ])
 
-  let shortToken = bs58.encode(shortTokenBytes).padStart(
+  let shortToken = base58.encode(shortTokenBytes).padStart(
     shortTokenLength,
     "0"
   ).slice(0, shortTokenLength)
 
-  const longToken = bs58.encode(longTokenBytes).padStart(
+  const longToken = base58.encode(longTokenBytes).padStart(
     longTokenLength,
     "0"
   ).slice(0, longTokenLength)
