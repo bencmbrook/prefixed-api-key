@@ -3,7 +3,6 @@ import { extractSecret, generateAPIKey } from 'src';
 
 test('generate api key', async (t) => {
   const apiKeyObject = await generateAPIKey({ keyPrefix: 'mycompany' });
-  console.log({ apiKeyObject });
   t.truthy(extractSecret(apiKeyObject.apiKey));
   t.truthy(apiKeyObject.secretHash);
   t.truthy(apiKeyObject.keyId);
