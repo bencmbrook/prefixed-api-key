@@ -9,7 +9,7 @@ export const hashSecret = (secret: string): string =>
   hashSecretToBuffer(secret).toString('hex');
 
 export interface GenerateAPIKeyOptions {
-  keyPrefix?: string;
+  keyPrefix: string;
   keyIdEntropy?: number;
   secretEntropy?: number;
 }
@@ -18,7 +18,7 @@ export const generateAPIKey = async ({
   keyPrefix,
   keyIdEntropy = 64,
   secretEntropy = 128,
-}: GenerateAPIKeyOptions = {}) => {
+}: GenerateAPIKeyOptions) => {
   if (!keyPrefix || keyPrefix.includes('_')) {
     throw new Error(
       'You must provide a `keyPrefix`, and it must not include `_` characters.',
