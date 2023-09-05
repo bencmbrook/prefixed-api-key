@@ -2,11 +2,11 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { base58 } from '@scure/base';
 
-const hashSecretToBuffer = (secret: string): Buffer =>
+const hashSecretAsBuffer = (secret: string): Buffer =>
   createHash('sha256').update(secret).digest();
 
 export const hashSecret = (secret: string): string =>
-  hashSecretToBuffer(secret).toString('hex');
+  hashSecretAsBuffer(secret).toString('hex');
 
 export interface GenerateAPIKeyOptions {
   keyPrefix: string;
@@ -70,6 +70,6 @@ export const checkAPIKey = (
   expectedSecretHash: string,
 ): boolean => {
   const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
-  const inputSecretHashBuffer = hashSecretToBuffer(extractSecret(token));
+  const inputSecretHashBuffer = hashSecretAsBuffer(extractSecret(token));
   return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };
