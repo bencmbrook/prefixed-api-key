@@ -10,19 +10,19 @@ test('generate api key', async (t) => {
   t.truthy(apiKey.token);
 });
 
-test('generate api key should throw when there is no keyPrefix', async (t) => {
-  await t.throwsAsync(() => generateAPIKey());
+test('generate api key should throw when there is an invalid keyPrefix', async (t) => {
+  await t.throwsAsync(() => generateAPIKey({ keyPrefix: 'my_company' }));
 });
 
 test('generate api key should return strings with the correct length', async (t) => {
-  const keyIdEntropy = 80;
+  const keyIdLength = 10;
   const secretEntropy = 160;
   const apiKey = await generateAPIKey({
     keyPrefix: 'mycompany',
-    keyIdEntropy: keyIdEntropy,
-    secretEntropy: secretEntropy,
+    keyIdLength,
+    secretEntropy,
   });
 
   t.truthy(apiKey.secret && apiKey.secret.length === secretEntropy / 8);
-  t.truthy(apiKey.keyId && apiKey.keyId.length === keyIdEntropy / 8);
+  t.truthy(apiKey.keyId && apiKey.keyId.length === keyIdLength);
 });
