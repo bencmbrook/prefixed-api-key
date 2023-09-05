@@ -70,13 +70,13 @@ export const generateAPIKey = async ({
 export const extractKeyId = (apiKey: string) => apiKey.split('_')[1];
 export const extractSecret = (apiKey: string) => apiKey.split('_')[2];
 
-export const getApiKeyComponents = (apiKey: string): APIKeyObject => ({
+export const getAPIKeyComponents = (apiKey: string): APIKeyObject => ({
   keyId: extractKeyId(apiKey),
   secretHash: hashSecret(extractSecret(apiKey)),
   apiKey,
 });
 
-export const checkApiKey = (
+export const checkAPIKey = (
   apiKey: string,
   expectedSecretHash: string,
 ): boolean => {

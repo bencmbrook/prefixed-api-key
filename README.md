@@ -15,7 +15,7 @@
 API keys look like this:
 
 ```
-mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG
+myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG
 ```
 
 Let's break down each component of the API key...
@@ -30,7 +30,7 @@ Prefix         Key ID            Secret
   This is very helpful in secret scanning.
 - The Key ID is stored by both the server and the key bearer/customer, it
   can be used to identify an API key in logs or displayed on a customer's
-  dashboard. A apiKey can be blocklisted by its Key ID.
+  dashboard. An `apiKey` can be blocklisted by its Key ID.
 - The Secret is how we authenticate this key. The secret is never stored
   on the server, but a hash of it is stored on the server. When we receive an
   incoming request, we search our database for `key_id` and `hash(secret)`.
@@ -40,7 +40,7 @@ Prefix         Key ID            Secret
 ```ts
 import { generateAPIKey } from '@bencmbrook/prefixed-api-key';
 
-const key = await generateAPIKey({ keyPrefix: 'mycompany' });
+const key = await generateAPIKey({ keyPrefix: 'myapp' });
 
 // Store the key.secretHash and key.keyId in your database and give
 // key.apiKey to your customer.
@@ -50,7 +50,7 @@ console.log(key);
 {
   keyId: 'BRTRKFsL',
   secretHash: 'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
-  apiKey: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG'
+  apiKey: 'myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG'
 }
 */
 ```
@@ -59,33 +59,33 @@ console.log(key);
 
 ```ts
 import {
-  checkApiKey,
+  checkAPIKey,
   extractKeyId,
   extractSecret,
-  getApiKeyComponents,
+  getAPIKeyComponents,
   hashSecret,
 } from '@bencmbrook/prefixed-api-key';
 
 hashSecret('51FwqftsmMDHHbJAMEXXHCgG');
 // "d70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37"
 
-extractSecret('mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
+extractSecret('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 // "51FwqftsmMDHHbJAMEXXHCgG"
 
-extractKeyId('mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
+extractKeyId('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 // "BRTRKFsL"
 
-getApiKeyComponents('mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
+getAPIKeyComponents('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 /*
 {
   keyId: 'BRTRKFsL',
   secretHash: 'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
-  apiKey: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG'
+  apiKey: 'myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG'
 }
 */
 
-checkApiKey(
-  'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
+checkAPIKey(
+  'myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
   'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
 );
 // true
