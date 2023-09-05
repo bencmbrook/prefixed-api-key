@@ -13,7 +13,7 @@ export const hashSecret = (secret: string): string =>
 export interface GenerateAPIKeyOptions {
   /** The prefix for your API key (e.g., `sk-myapp`) */
   keyPrefix: string;
-  /** The desired length of the key ID (which is in base58) */
+  /** The desired length of the key ID (which is in base58). Defaults to 8. */
   keyIdLength?: number;
   /** The entropy of the secret in bits. Defaults to 128. */
   secretEntropy?: number;
