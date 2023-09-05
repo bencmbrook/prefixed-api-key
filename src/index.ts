@@ -19,11 +19,20 @@ export interface GenerateAPIKeyOptions {
   secretEntropy?: number;
 }
 
+export interface APIKeyObject {
+  /** A random identifier for this key. Not a secret. Should be stored in the DB. */
+  keyId: string;
+  /** A hash of the secret. Should be stored in the DB. */
+  secretHash: string;
+  /** The fully formed token to give to the API client */
+  apiKey: string;
+}
+
 export const generateAPIKey = async ({
   keyPrefix,
   keyIdLength = 8,
   secretEntropy = 128,
-}: GenerateAPIKeyOptions) => {
+}: GenerateAPIKeyOptions): Promise<APIKeyObject> => {
   if (secretEntropy % 8 !== 0) {
     throw new Error(
       '`secretEntropy` must be a multiple of 8 so it can fill a byte string.',
@@ -53,26 +62,25 @@ export const generateAPIKey = async ({
     .padStart(secretLength, '0')
     .slice(0, secretLength);
 
-  const token = `${keyPrefix}_${keyId}_${secret}`;
+  const apiKey = `${keyPrefix}_${keyId}_${secret}`;
   const secretHash = hashSecret(secret);
-  return { keyId, secret, secretHash, token };
+  return { keyId, secretHash, apiKey };
 };
 
-export const extractKeyId = (token: string) => token.split('_')[1];
-export const extractSecret = (token: string) => token.split('_')[2];
+export const extractKeyId = (apiKey: string) => apiKey.split('_')[1];
+export const extractSecret = (apiKey: string) => apiKey.split('_')[2];
 
-export const getTokenComponents = (token: string) => ({
-  keyId: extractKeyId(token),
-  secret: extractSecret(token),
-  secretHash: hashSecret(extractSecret(token)),
-  token,
+export const getApiKeyComponents = (apiKey: string): APIKeyObject => ({
+  keyId: extractKeyId(apiKey),
+  secretHash: hashSecret(extractSecret(apiKey)),
+  apiKey,
 });
 
-export const checkToken = (
-  token: string,
+export const checkApiKey = (
+  apiKey: string,
   expectedSecretHash: string,
 ): boolean => {
-  const inputSecretHashBuffer = hashSecretAsBuffer(extractSecret(token));
+  const inputSecretHashBuffer = hashSecretAsBuffer(extractSecret(apiKey));
   const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
   return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };

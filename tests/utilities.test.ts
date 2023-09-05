@@ -1,32 +1,37 @@
 import test from 'ava';
 import {
-  checkToken,
+  APIKeyObject,
+  checkApiKey,
   extractKeyId,
   extractSecret,
-  getTokenComponents,
+  getApiKeyComponents,
   hashSecret,
 } from 'src';
 
-const exampleKey = {
+const exampleKeyObject: APIKeyObject = {
   keyId: 'BRTRKFsL',
-  secret: '51FwqftsmMDHHbJAMEXXHCgG',
   secretHash:
     'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
-  token: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
+  apiKey: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
 };
 
+const secret = extractSecret(exampleKeyObject.apiKey);
+
 test('hashSecret', async (t) => {
-  t.is(hashSecret(exampleKey.secret), exampleKey.secretHash);
+  t.is(hashSecret(secret), exampleKeyObject.secretHash);
 });
 test('extractSecret', async (t) => {
-  t.is(extractSecret(exampleKey.token), exampleKey.secret);
+  t.is(extractSecret(exampleKeyObject.apiKey), '51FwqftsmMDHHbJAMEXXHCgG');
 });
 test('extractKeyId', async (t) => {
-  t.is(extractKeyId(exampleKey.token), exampleKey.keyId);
+  t.is(extractKeyId(exampleKeyObject.apiKey), exampleKeyObject.keyId);
 });
-test('getTokenComponents', async (t) => {
-  t.deepEqual(getTokenComponents(exampleKey.token), exampleKey);
+test('getApiKeyComponents', async (t) => {
+  t.deepEqual(getApiKeyComponents(exampleKeyObject.apiKey), exampleKeyObject);
 });
-test('checkToken', async (t) => {
-  t.is(await checkToken(exampleKey.token, exampleKey.secretHash), true);
+test('checkApiKey', async (t) => {
+  t.is(
+    await checkApiKey(exampleKeyObject.apiKey, exampleKeyObject.secretHash),
+    true,
+  );
 });

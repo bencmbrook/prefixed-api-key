@@ -1,13 +1,13 @@
 import test from 'ava';
-import { generateAPIKey } from 'src';
+import { extractSecret, generateAPIKey } from 'src';
 
 test('generate api key', async (t) => {
-  const apiKey = await generateAPIKey({ keyPrefix: 'mycompany' });
+  const apiKeyObject = await generateAPIKey({ keyPrefix: 'mycompany' });
 
-  t.truthy(apiKey.secret);
-  t.truthy(apiKey.secretHash);
-  t.truthy(apiKey.keyId);
-  t.truthy(apiKey.token);
+  t.truthy(extractSecret(apiKeyObject.apiKey));
+  t.truthy(apiKeyObject.secretHash);
+  t.truthy(apiKeyObject.keyId);
+  t.truthy(apiKeyObject.apiKey);
 });
 
 test('generate api key should throw when there is an invalid keyPrefix', async (t) => {
@@ -17,12 +17,14 @@ test('generate api key should throw when there is an invalid keyPrefix', async (
 test('generate api key should return strings with the correct length', async (t) => {
   const keyIdLength = 10;
   const secretEntropy = 160;
-  const apiKey = await generateAPIKey({
+  const apiKeyObject = await generateAPIKey({
     keyPrefix: 'mycompany',
     keyIdLength,
     secretEntropy,
   });
 
-  t.truthy(apiKey.secret && apiKey.secret.length === secretEntropy / 8);
-  t.truthy(apiKey.keyId && apiKey.keyId.length === keyIdLength);
+  const secret = extractSecret(apiKeyObject.apiKey);
+
+  t.truthy(secret && secret.length === secretEntropy / 8);
+  t.truthy(apiKeyObject.keyId && apiKeyObject.keyId.length === keyIdLength);
 });
