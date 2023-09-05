@@ -11,6 +11,7 @@ export const hashSecret = (secret: string): string =>
   hashSecretAsBuffer(secret).toString('hex');
 
 export interface GenerateAPIKeyOptions {
+  /** The prefix for your API key (e.g., `sk-myapp`) */
   keyPrefix: string;
   /** The desired length of the key ID (which is in base58) */
   keyIdLength?: number;
@@ -67,11 +68,11 @@ export const getTokenComponents = (token: string) => ({
   token,
 });
 
-export const checkAPIKey = (
+export const checkToken = (
   token: string,
   expectedSecretHash: string,
 ): boolean => {
-  const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
   const inputSecretHashBuffer = hashSecretAsBuffer(extractSecret(token));
+  const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
   return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };

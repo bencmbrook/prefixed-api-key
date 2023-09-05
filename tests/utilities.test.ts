@@ -1,6 +1,6 @@
 import test from 'ava';
 import {
-  checkAPIKey,
+  checkToken,
   extractKeyId,
   extractSecret,
   getTokenComponents,
@@ -27,6 +27,6 @@ test('extractKeyId', async (t) => {
 test('getTokenComponents', async (t) => {
   t.deepEqual(getTokenComponents(exampleKey.token), exampleKey);
 });
-test('checkAPIKey', async (t) => {
-  t.is(await checkAPIKey(exampleKey.token, exampleKey.secretHash), true);
+test('checkToken', async (t) => {
+  t.is(await checkToken(exampleKey.token, exampleKey.secretHash), true);
 });

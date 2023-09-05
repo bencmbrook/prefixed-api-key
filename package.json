@@ -1,10 +1,10 @@
 {
-  "name": "prefixed-api-key",
-  "version": "1.1.0",
+  "name": "@bencmbrook/prefixed-api-key",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "license": "MIT",
-  "description": "Generate seam-style API-keys",
-  "repository": "git@github.com:seamapi/prefixed-api-key.git",
+  "description": "Generate prefixed API-keys",
+  "repository": "git@github.com:bencmbrook/prefixed-api-key.git",
   "scripts": {
     "build": "tsup --dts --clean -d dist src",
     "test": "ava"

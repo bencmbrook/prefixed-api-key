@@ -1,12 +1,6 @@
-# Prefixed API Key (Seam-style)
+# Generate Prefixed API Keys
 
-**Fork of [seamapi/prefixed-api-key](https://github.com/seamapi/prefixed-api-key)**
-
-> Example key: `mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG`
->
-> [Discussion on Hacker News](https://news.ycombinator.com/item?id=31333933#31336542) &middot; [Awesome Seam Open-Source](https://github.com/seamapi/awesome-seam)
-
-Seam-style API Keys have many advantages:
+**This is a fork of [seamapi/prefixed-api-key](https://github.com/seamapi/prefixed-api-key)**. Seam-style API Keys have many advantages:
 
 - Double clicking the api key selects the entire api key
 - The alphabet is standard across languages thanks [to the base58 RFC](https://datatracker.ietf.org/doc/html/draft-msporny-base58) and its usage in cryptocurrencies
@@ -27,9 +21,9 @@ mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG
 Let's break down each component of the API key...
 
 ```
-mycompany ..._...  BRTRKFsL ..._...  51FwqftsmMDHHbJAMEXXHCgG
-^                  ^                 ^
-Prefix             Key ID            Secret
+myapp ..._...  BRTRKFsL ..._...  51FwqftsmMDHHbJAMEXXHCgG
+^              ^                 ^
+Prefix         Key ID            Secret
 ```
 
 - The Prefix is used to identify the company or service creating the API Key.
@@ -44,7 +38,7 @@ Prefix             Key ID            Secret
 ## Getting Started
 
 ```ts
-import { generateAPIKey } from 'prefixed-api-key';
+import { generateAPIKey } from '@bencmbrook/prefixed-api-key';
 
 const key = await generateAPIKey({ keyPrefix: 'mycompany' });
 
@@ -69,9 +63,9 @@ import {
   hashSecret,
   extractSecret,
   extractKeyId,
-  checkAPIKey,
+  checkToken,
   getTokenComponents,
-} from "prefixed-api-key"
+} from "@bencmbrook/prefixed-api-key"
 
 hashSecret("51FwqftsmMDHHbJAMEXXHCgG")
 // "d70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37"
@@ -93,7 +87,7 @@ getTokenComponents("mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG")
 }
 */
 
-checkAPIKey(
+checkToken(
   "mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG",
   "d70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37"
 )
