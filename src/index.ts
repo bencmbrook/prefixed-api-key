@@ -17,9 +17,13 @@ export interface GenerateAPIKeyOptions {
 export const generateAPIKey = async ({
   keyPrefix,
   keyIdEntropy = 64,
-  secretEntropy = 192,
+  secretEntropy = 128,
 }: GenerateAPIKeyOptions = {}) => {
-  if (!keyPrefix) return {};
+  if (!keyPrefix || keyPrefix.includes('_')) {
+    throw new Error(
+      'You must provide a `keyPrefix`, and it must not include `_` characters.',
+    );
+  }
 
   const keyIdLength = keyIdEntropy / 8;
   const secretLength = secretEntropy / 8;
@@ -69,6 +73,3 @@ export const checkAPIKey = (
   const inputSecretHashBuffer = hashSecretToBuffer(extractSecret(token));
   return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };
-
-generateAPIKey({ keyPrefix: 'pathfinder' }).then(console.log);
-generateAPIKey({ keyPrefix: 'pathfinder' }).then(console.log);

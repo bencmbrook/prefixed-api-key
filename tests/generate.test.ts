@@ -10,13 +10,8 @@ test('generate api key', async (t) => {
   t.truthy(apiKey.token);
 });
 
-test('generate api key should return an empty object when there is no keyPrefix', async (t) => {
-  const apiKey = await generateAPIKey();
-
-  t.falsy(apiKey.secret);
-  t.falsy(apiKey.secretHash);
-  t.falsy(apiKey.keyId);
-  t.falsy(apiKey.token);
+test('generate api key should throw when there is no keyPrefix', async (t) => {
+  await t.throwsAsync(() => generateAPIKey());
 });
 
 test('generate api key should return strings with the correct length', async (t) => {
