@@ -2,75 +2,73 @@ import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { base58 } from '@scure/base';
 
-const hashLongTokenToBuffer = (longToken: string): Buffer =>
-  createHash('sha256').update(longToken).digest();
+const hashSecretToBuffer = (secret: string): Buffer =>
+  createHash('sha256').update(secret).digest();
 
-export const hashLongToken = (longToken: string): string =>
-  hashLongTokenToBuffer(longToken).toString('hex');
+export const hashSecret = (secret: string): string =>
+  hashSecretToBuffer(secret).toString('hex');
 
 export interface GenerateAPIKeyOptions {
   keyPrefix?: string;
-  shortTokenPrefix?: string;
-  shortTokenLength?: number;
-  longTokenLength?: number;
+  keyIdEntropy?: number;
+  secretEntropy?: number;
 }
 
 export const generateAPIKey = async ({
   keyPrefix,
-  shortTokenPrefix = '',
-  shortTokenLength = 8,
-  longTokenLength = 24,
+  keyIdEntropy = 64,
+  secretEntropy = 192,
 }: GenerateAPIKeyOptions = {}) => {
   if (!keyPrefix) return {};
 
+  const keyIdLength = keyIdEntropy / 8;
+  const secretLength = secretEntropy / 8;
+
   const generatedRandomBytes = promisify(randomBytes);
-  const [shortTokenBytes, longTokenBytes] = await Promise.all([
+  const [keyIdBytes, secretBytes] = await Promise.all([
     // you need ~0.732 * length bytes, but it's fine to have more bytes
-    generatedRandomBytes(shortTokenLength),
-    generatedRandomBytes(longTokenLength),
+    generatedRandomBytes(keyIdLength),
+    generatedRandomBytes(secretLength),
   ]);
 
-  let shortToken = base58
-    .encode(shortTokenBytes)
-    .padStart(shortTokenLength, '0')
-    .slice(0, shortTokenLength);
+  const keyId = base58
+    .encode(keyIdBytes)
+    .padStart(keyIdLength, '0')
+    .slice(0, keyIdLength);
 
-  const longToken = base58
-    .encode(longTokenBytes)
-    .padStart(longTokenLength, '0')
-    .slice(0, longTokenLength);
+  const secret = base58
+    .encode(secretBytes)
+    .padStart(secretLength, '0')
+    .slice(0, secretLength);
 
-  const longTokenHash = hashLongToken(longToken);
+  const token = `${keyPrefix}_${keyId}_${secret}`;
 
-  shortToken = (shortTokenPrefix + shortToken).slice(0, shortTokenLength);
-
-  const token = `${keyPrefix}_${shortToken}_${longToken}`;
-
-  return { shortToken, longToken, longTokenHash, token };
+  const secretHash = hashSecret(secret);
+  return { keyId, secret, secretHash, token };
 };
 
-export const extractLongToken = (token: string) =>
-  token.split('_').slice(-1)?.[0];
+export const extractSecret = (token: string) => token.split('_').slice(-1)?.[0];
 
-export const extractShortToken = (token: string) => token.split('_')?.[1];
+export const extractKeyId = (token: string) => token.split('_')?.[1];
 
-export const extractLongTokenHash = (token: string) =>
-  hashLongToken(extractLongToken(token));
+export const extractSecretHash = (token: string) =>
+  hashSecret(extractSecret(token));
 
 export const getTokenComponents = (token: string) => ({
-  longToken: extractLongToken(token),
-  shortToken: extractShortToken(token),
-  longTokenHash: hashLongToken(extractLongToken(token)),
+  secret: extractSecret(token),
+  keyId: extractKeyId(token),
+  secretHash: hashSecret(extractSecret(token)),
   token,
 });
 
 export const checkAPIKey = (
   token: string,
-  expectedLongTokenHash: string,
+  expectedSecretHash: string,
 ): boolean => {
-  const expectedLongTokenHashBuffer = Buffer.from(expectedLongTokenHash, 'hex');
-  const inputLongTokenHashBuffer = hashLongTokenToBuffer(
-    extractLongToken(token),
-  );
-  return timingSafeEqual(expectedLongTokenHashBuffer, inputLongTokenHashBuffer);
+  const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
+  const inputSecretHashBuffer = hashSecretToBuffer(extractSecret(token));
+  return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };
+
+generateAPIKey({ keyPrefix: 'pathfinder' }).then(console.log);
+generateAPIKey({ keyPrefix: 'pathfinder' }).then(console.log);

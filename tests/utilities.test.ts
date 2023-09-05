@@ -1,32 +1,32 @@
 import test from 'ava';
 import {
   checkAPIKey,
-  extractLongToken,
-  extractShortToken,
+  extractKeyId,
+  extractSecret,
   getTokenComponents,
-  hashLongToken,
+  hashSecret,
 } from 'src';
 
 const exampleKey = {
-  shortToken: 'BRTRKFsL',
-  longToken: '51FwqftsmMDHHbJAMEXXHCgG',
-  longTokenHash:
+  keyId: 'BRTRKFsL',
+  secret: '51FwqftsmMDHHbJAMEXXHCgG',
+  secretHash:
     'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
   token: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
 };
 
-test('hashLongToken', async (t) => {
-  t.is(hashLongToken(exampleKey.longToken), exampleKey.longTokenHash);
+test('hashSecret', async (t) => {
+  t.is(hashSecret(exampleKey.secret), exampleKey.secretHash);
 });
-test('extractLongToken', async (t) => {
-  t.is(extractLongToken(exampleKey.token), exampleKey.longToken);
+test('extractSecret', async (t) => {
+  t.is(extractSecret(exampleKey.token), exampleKey.secret);
 });
-test('extractShortToken', async (t) => {
-  t.is(extractShortToken(exampleKey.token), exampleKey.shortToken);
+test('extractKeyId', async (t) => {
+  t.is(extractKeyId(exampleKey.token), exampleKey.keyId);
 });
 test('getTokenComponents', async (t) => {
   t.deepEqual(getTokenComponents(exampleKey.token), exampleKey);
 });
 test('checkAPIKey', async (t) => {
-  t.is(await checkAPIKey(exampleKey.token, exampleKey.longTokenHash), true);
+  t.is(await checkAPIKey(exampleKey.token, exampleKey.secretHash), true);
 });

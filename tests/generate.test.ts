@@ -4,30 +4,30 @@ import { generateAPIKey } from 'src';
 test('generate api key', async (t) => {
   const apiKey = await generateAPIKey({ keyPrefix: 'mycompany' });
 
-  t.truthy(apiKey.longToken);
-  t.truthy(apiKey.longTokenHash);
-  t.truthy(apiKey.shortToken);
+  t.truthy(apiKey.secret);
+  t.truthy(apiKey.secretHash);
+  t.truthy(apiKey.keyId);
   t.truthy(apiKey.token);
 });
 
 test('generate api key should return an empty object when there is no keyPrefix', async (t) => {
   const apiKey = await generateAPIKey();
 
-  t.falsy(apiKey.longToken);
-  t.falsy(apiKey.longTokenHash);
-  t.falsy(apiKey.shortToken);
+  t.falsy(apiKey.secret);
+  t.falsy(apiKey.secretHash);
+  t.falsy(apiKey.keyId);
   t.falsy(apiKey.token);
 });
 
 test('generate api key should return strings with the correct length', async (t) => {
-  const shortTokenLength = 10;
-  const longTokenLength = 20;
+  const keyIdEntropy = 80;
+  const secretEntropy = 160;
   const apiKey = await generateAPIKey({
     keyPrefix: 'mycompany',
-    shortTokenLength: shortTokenLength,
-    longTokenLength: longTokenLength,
+    keyIdEntropy: keyIdEntropy,
+    secretEntropy: secretEntropy,
   });
 
-  t.truthy(apiKey.longToken && apiKey.longToken.length === longTokenLength);
-  t.truthy(apiKey.shortToken && apiKey.shortToken.length === shortTokenLength);
+  t.truthy(apiKey.secret && apiKey.secret.length === secretEntropy / 8);
+  t.truthy(apiKey.keyId && apiKey.keyId.length === keyIdEntropy / 8);
 });
