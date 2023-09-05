@@ -1,5 +1,7 @@
 # Prefixed API Key (Seam-style)
 
+**Fork of [seamapi/prefixed-api-key](https://github.com/seamapi/prefixed-api-key)**
+
 > Example key: `mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG`
 >
 > [Discussion on Hacker News](https://news.ycombinator.com/item?id=31333933#31336542) &middot; [Awesome Seam Open-Source](https://github.com/seamapi/awesome-seam)
@@ -16,7 +18,7 @@ Seam-style API Keys have many advantages:
 
 ## The Format
 
-Seam-style api keys look like this:
+API keys look like this:
 
 ```
 mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG
@@ -27,7 +29,7 @@ Let's break down each component of the API key...
 ```
 mycompany ..._...  BRTRKFsL ..._...  51FwqftsmMDHHbJAMEXXHCgG
 ^                  ^                 ^
-Prefix             Key ID       Secret
+Prefix             Key ID            Secret
 ```
 
 - The Prefix is used to identify the company or service creating the API Key.
@@ -91,7 +93,7 @@ getTokenComponents("mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG")
 }
 */
 
-await checkAPIKey(
+checkAPIKey(
   "mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG",
   "d70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37"
 )
