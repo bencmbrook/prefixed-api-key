@@ -1,33 +1,35 @@
+import { base58 } from '@scure/base';
 import test from 'ava';
 import {
   APIKeyObject,
   checkAPIKey,
   extractKeyId,
   extractSecret,
-  getAPIKeyComponents,
+  extractSecretAsBuffer,
+  getAPIKeyObject,
   hashSecret,
 } from 'src';
 
 const exampleKeyObject: APIKeyObject = {
-  keyId: 'BRTRKFsL',
-  secretHash:
-    'd70d981d87b449c107327c2a2afbf00d4b58070d6ba571aac35d7ea3e7c79f37',
-  apiKey: 'mycompany_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG',
+  keyId: '25RbpSyxVex',
+  secretHash: 'EqrEJ1mg3RifmHL3rv2dRVuKuF43jqPbSqmhpuSeXxKF',
+  apiKey: 'mycompany_25RbpSyxVex_Gp6TRzhNvYA5GonfggbvNU',
 };
 
 const secret = extractSecret(exampleKeyObject.apiKey);
+const secretAsBuffer = extractSecretAsBuffer(exampleKeyObject.apiKey);
 
 test('hashSecret', async (t) => {
-  t.is(hashSecret(secret), exampleKeyObject.secretHash);
+  t.is(hashSecret(secretAsBuffer), exampleKeyObject.secretHash);
 });
 test('extractSecret', async (t) => {
-  t.is(extractSecret(exampleKeyObject.apiKey), '51FwqftsmMDHHbJAMEXXHCgG');
+  t.is(extractSecret(exampleKeyObject.apiKey), 'Gp6TRzhNvYA5GonfggbvNU');
 });
 test('extractKeyId', async (t) => {
   t.is(extractKeyId(exampleKeyObject.apiKey), exampleKeyObject.keyId);
 });
-test('getAPIKeyComponents', async (t) => {
-  t.deepEqual(getAPIKeyComponents(exampleKeyObject.apiKey), exampleKeyObject);
+test('getAPIKeyObject', async (t) => {
+  t.deepEqual(getAPIKeyObject(exampleKeyObject.apiKey), exampleKeyObject);
 });
 test('checkAPIKey', async (t) => {
   t.is(

@@ -62,7 +62,7 @@ import {
   checkAPIKey,
   extractKeyId,
   extractSecret,
-  getAPIKeyComponents,
+  getAPIKeyObject,
   hashSecret,
 } from '@bencmbrook/prefixed-api-key';
 
@@ -75,7 +75,7 @@ extractSecret('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 extractKeyId('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 // "BRTRKFsL"
 
-getAPIKeyComponents('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
+getAPIKeyObject('myapp_BRTRKFsL_51FwqftsmMDHHbJAMEXXHCgG');
 /*
 {
   keyId: 'BRTRKFsL',

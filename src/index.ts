@@ -4,11 +4,11 @@ import { base58 } from '@scure/base';
 
 const randomBytesAsync = promisify(randomBytes);
 
-const hashSecretAsBuffer = (secret: string): Buffer =>
+const hashSecretAsBuffer = (secret: Buffer): Buffer =>
   createHash('sha256').update(secret).digest();
 
-export const hashSecret = (secret: string): string =>
-  hashSecretAsBuffer(secret).toString('hex');
+export const hashSecret = (secret: Buffer): string =>
+  base58.encode(hashSecretAsBuffer(secret));
 
 export interface GenerateAPIKeyOptions {
   /** The prefix for your API key (e.g., `sk-myapp`) */
@@ -52,35 +52,54 @@ export const generateAPIKey = async ({
     randomBytesAsync(secretLength),
   ]);
 
-  const keyId = base58
-    .encode(keyIdBytes)
-    .padStart(keyIdLength, '0')
-    .slice(0, keyIdLength);
-
-  const secret = base58
-    .encode(secretBytes)
-    .padStart(secretLength, '0')
-    .slice(0, secretLength);
+  const keyId = base58.encode(keyIdBytes);
+  const secret = base58.encode(secretBytes);
 
   const apiKey = `${keyPrefix}_${keyId}_${secret}`;
-  const secretHash = hashSecret(secret);
+  const secretHash = hashSecret(secretBytes);
   return { keyId, secretHash, apiKey };
 };
 
-export const extractKeyId = (apiKey: string) => apiKey.split('_')[1];
-export const extractSecret = (apiKey: string) => apiKey.split('_')[2];
+const extractParts = (apiKey: string): string[] => {
+  if (typeof apiKey !== 'string') {
+    throw new Error('apiKey must be a string');
+  }
+  const parts = apiKey.split('_');
+  if (parts.length !== 3 || parts.some((part) => part.length < 1)) {
+    throw new Error(
+      'Unexpected API key format. There should be 3 parts separate by `_`.',
+    );
+  }
+  return parts;
+};
 
-export const getAPIKeyComponents = (apiKey: string): APIKeyObject => ({
+export const extractKeyId = (apiKey: string) => extractParts(apiKey)[1];
+export const extractSecret = (apiKey: string) => extractParts(apiKey)[2];
+export const extractSecretAsBuffer = (apiKey: string): Buffer =>
+  Buffer.from(base58.decode(extractSecret(apiKey)));
+
+export const getAPIKeyObject = (apiKey: string): APIKeyObject => ({
   keyId: extractKeyId(apiKey),
-  secretHash: hashSecret(extractSecret(apiKey)),
+  secretHash: hashSecret(extractSecretAsBuffer(apiKey)),
   apiKey,
 });
 
+/**
+ * Verify the client's provided API Key
+ *
+ * @param inputAPIKey - the client-provided API key
+ * @param expectedSecretHash - the secret hash stored in the DB (base58 encoded)
+ * @returns true if the API key is valid, false otherwise
+ */
 export const checkAPIKey = (
-  apiKey: string,
+  inputAPIKey: string,
   expectedSecretHash: string,
 ): boolean => {
-  const inputSecretHashBuffer = hashSecretAsBuffer(extractSecret(apiKey));
-  const expectedSecretHashBuffer = Buffer.from(expectedSecretHash, 'hex');
+  const inputSecretHashBuffer = hashSecretAsBuffer(
+    extractSecretAsBuffer(inputAPIKey),
+  );
+  const expectedSecretHashBuffer = Buffer.from(
+    base58.decode(expectedSecretHash),
+  );
   return timingSafeEqual(expectedSecretHashBuffer, inputSecretHashBuffer);
 };
