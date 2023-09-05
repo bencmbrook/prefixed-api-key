@@ -1,13 +1,17 @@
 {
   "name": "@bencmbrook/prefixed-api-key",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "main": "dist/index.js",
   "license": "MIT",
   "description": "Generate prefixed API-keys",
   "repository": "git@github.com:bencmbrook/prefixed-api-key.git",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup --dts --clean -d dist src",
-    "test": "ava"
+    "test": "ava",
+    "prepublish": "yarn build"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
