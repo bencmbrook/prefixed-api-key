@@ -54,7 +54,7 @@ const inputFixture = new Uint8Array(
     'hex',
   ),
 );
-const encodedFixture = 'CSdfPvBnXbrc2RyiUZAFoAkiHaSt2Z56pV3txmTKtfzV';
+const encodedFixture = 'CSdfPvBnXbrc2RyiUZAFoAkiHaSt2Z56pV3txmTKtfzV' as const;
 test('base58 encode - inputFixture encodes as expected', async (t) => {
   t.is(base58.encode(inputFixture), encodedFixture);
 });
